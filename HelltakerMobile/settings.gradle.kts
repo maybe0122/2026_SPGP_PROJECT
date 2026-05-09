@@ -24,4 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "HelltakerMobile"
 include(":app")
- 
+include(":a2dg")
