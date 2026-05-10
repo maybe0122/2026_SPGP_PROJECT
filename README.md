@@ -68,9 +68,6 @@ MainActivity와 HelltakerAcitvity
 # Scene 구성 및 전환 관계
 추후 추가 예정
 
-# MainScene 에 등장하는 game object 들에 대하여 다음 사항 포함
-추후 추가 예정
-
 # class 구성 정보 (그림 구성, 동작 구성 등)
 추후 추가 예정
 
