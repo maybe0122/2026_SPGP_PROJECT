@@ -12,10 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HelltakerMobile">
         <activity
-            android:name=".HelltakerMobileActivity"
+            android:name=".app.HelltakerMobileActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".app.MainActivity"
             android:exported="true"
             android:screenOrientation="sensorLandscape">
             <intent-filter>

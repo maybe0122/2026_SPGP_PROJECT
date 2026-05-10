@@ -1,4 +1,4 @@
-package kr.ac.tukorea.ge.spgp.kyumin.helltakermobile
+package kr.ac.tukorea.ge.spgp.kyumin.helltakermobile.app
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import kr.ac.tukorea.ge.spgp.kyumin.helltakermobile.BuildConfig
 import kr.ac.tukorea.ge.spgp.kyumin.helltakermobile.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
