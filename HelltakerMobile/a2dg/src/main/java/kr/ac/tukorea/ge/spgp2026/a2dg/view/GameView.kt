@@ -104,10 +104,12 @@ class GameView @JvmOverloads constructor(
         // 이 블록 안에서는 실제 화면 좌표가 아니라
         // 현재 GameMetrics 가 들고 있는 가상 좌표계 기준으로 그린다고 생각하면 된다.
         canvas.withMatrix(gctx.metrics.transformMatrix) {
+            drawScenes(canvas)
+
             if (drawsDebugGrid) {
                 drawDebugGrid() // 가상 좌표계의 격자선을 그린다.
             }
-            drawScenes(canvas)
+
             if (drawsDebugInfo || drawsFpsGraph) {
                 drawDebugInfo() // FPS 등의 디버그 정보를 그린다.
             }
@@ -214,6 +216,7 @@ class GameView @JvmOverloads constructor(
         }
 
         // 가로 격자선은 y 값을 100씩 늘리며 왼쪽에서 오른쪽으로 선을 긋는다.
+        // 보드에 맞춰서 그릴 수 있도록 수정하기
         var y = 0f
         while (y <= gctx.metrics.height) {
             drawLine(0f, y, gctx.metrics.width, y, gridPaint)
