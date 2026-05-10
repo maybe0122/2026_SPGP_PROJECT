@@ -10,7 +10,7 @@ Tile Map 기반의 퍼즐 게임인 HEELTAKER 모작(모바일 버전)
 
 # 개발 범위
 1. game framework 구현
-2. TileMap Editor 구현
+2. ~~TileMap Editor 구현~~
 3. Image Resource Sheet, Stage data file, SceneGameObject Layering, Score / Font Drawing 활용
 
 # 예상 게임 실행 흐름
@@ -33,10 +33,52 @@ Tile Map 기반의 퍼즐 게임인 HEELTAKER 모작(모바일 버전)
 
 4주차(4월 27일 ~ 5월 3일)  : Game 핵심 로직 구현 및 GameObject 제작 
 
-5주차(5월 4일 ~ 5월 10일)  : TileMap Editor 제작 
+5주차(5월 4일 ~ 5월 10일)  : Stage 1 2 3 구현 
 
-6주차(5월 11일 ~ 5월 17일) : Stage 1 2 3 구현 
+6주차(5월 11일 ~ 5월 17일) : 중간 점검 및 미구현 항목 보완
 
 7주차(5월 18일 ~ 5월 24일) : 사운드, 애니메이션 추가 및 시작 화면 제작 
 
 8주차(5월 25일 ~ 5월 31일) : Project 점검 및 보완 
+
+5주차의 TileMapEditor 구현 -> Stage 1 2 3 구현 
+
+6주차의 Stage 1 2 3 구현 -> 중간 점검 및 미구현 항목 보완 
+
+
+# 현재까지의 진행 상황
+
+1주차 Game Resource 수집 100%
+
+2~3주차 GameFrameWork 제작 10%
+
+4주차 Game 로직 구현 및 Object 제작 0%
+
+5주차 Stage 구현 10%
+
+# git commit 자료
+<img width="676" height="398" alt="image" src="https://github.com/user-attachments/assets/4cb2a78f-6e50-4e02-876d-1b7cd961eeab" />
+
+# 주별 commit 수
+<img width="331" height="163" alt="image" src="https://github.com/user-attachments/assets/0a0e4fcf-2de2-42f3-99b6-21d1fe539660" />
+
+# Activity 구성
+MainActivity와 HelltakerAcitvity
+
+# Scene 구성 및 전환 관계
+추후 추가 예정
+
+# MainScene 에 등장하는 game object 들에 대하여 다음 사항 포함
+추후 추가 예정
+
+# class 구성 정보 (그림 구성, 동작 구성 등)
+추후 추가 예정
+
+# 상호작용 정보
+추후 추가 예정
+
+# 게임 내에서 이 class 가 책임지는 핵심 코드에 대한 간단한 설명
+추후 추가 예정
+
+# UX 진행 방법
+추후 추가 예정
