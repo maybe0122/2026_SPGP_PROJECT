@@ -3,7 +3,6 @@ package kr.ac.tukorea.ge.spgp2026.a2dg.view
 import android.graphics.Matrix
 import android.graphics.PointF
 import android.graphics.RectF
-import android.util.Log
 
 private const val DEFAULT_VIRTUAL_WIDTH = 900f
 private const val DEFAULT_VIRTUAL_HEIGHT = 1600f
@@ -57,10 +56,6 @@ class GameMetrics {
 
         screenRect.set(0f, 0f, w.toFloat(), h.toFloat())
         inverseTransformMatrix.mapRect(screenRect)
-        Log.d(
-            javaClass.simpleName,
-            "onSize: screen=${w}x$h, virtual=${width}x$height, screenRect=$screenRect"
-        )
     }
 
     // 실제 화면 좌표를 가상 좌표계 좌표로 되돌린다.

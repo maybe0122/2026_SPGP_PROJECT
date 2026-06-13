@@ -39,4 +39,12 @@ class BitmapPool(
             BitmapFactory.decodeResource(resources, id, decodeOptions)
         }
     }
+
+    fun contains(id: Int): Boolean {
+        return bitmaps.containsKey(id)
+    }
+
+    fun clear() {
+        bitmaps.clear()
+    }
 }

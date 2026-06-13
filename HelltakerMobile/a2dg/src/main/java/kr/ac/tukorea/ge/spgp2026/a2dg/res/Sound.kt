@@ -16,6 +16,18 @@ import android.media.SoundPool
 class Sound(
     context: Context,
 ) {
+    private enum class VolumeLevel(val label: String, val volume: Float) {
+        HIGH("High", 1.0f),
+        MEDIUM("Medium", 0.6f),
+        LOW("Low", 0.3f),
+        OFF("Off", 0.0f);
+
+        fun next(): VolumeLevel {
+            val values = entries
+            return values[(ordinal + 1) % values.size]
+        }
+    }
+
     // GameResources 가 Sound 인스턴스를 소유하고, GameContext 는 GameResources 를 소유한다.
     // 따라서 소리를 내려는 객체는 gctx 를 기억하고 있다가 gctx.res.sound.playEffect(...) 처럼 접근한다.
     //
@@ -23,21 +35,39 @@ class Sound(
     // 그래서 applicationContext 를 저장해 앱 전체 생명주기에 맞춰 사용한다.
     private val appContext = context.applicationContext
     private var mediaPlayer: MediaPlayer? = null
+    private var currentMusicResId: Int? = null
     private var soundPool: SoundPool? = null
     private val soundIds = mutableMapOf<Int, Int>()
+    private val loadedSoundIds = mutableSetOf<Int>()
+    private val pendingPlayCounts = mutableMapOf<Int, Int>()
+    private var musicVolumeLevel = VolumeLevel.MEDIUM
+    private var effectVolumeLevel = VolumeLevel.HIGH
+
+    val musicVolumeText: String
+        get() = musicVolumeLevel.label
+
+    val effectVolumeText: String
+        get() = effectVolumeLevel.label
 
     fun playMusic(resId: Int) {
+        if (currentMusicResId == resId && mediaPlayer != null) {
+            resumeMusic()
+            return
+        }
         stopMusic()
         mediaPlayer = MediaPlayer.create(appContext, resId).apply {
             isLooping = true
+            setVolume(musicVolumeLevel.volume, musicVolumeLevel.volume)
             start()
         }
+        currentMusicResId = resId
     }
 
     fun stopMusic() {
         mediaPlayer?.stop()
         mediaPlayer?.release()
         mediaPlayer = null
+        currentMusicResId = null
     }
 
     fun pauseMusic() {
@@ -48,12 +78,46 @@ class Sound(
         mediaPlayer?.start()
     }
 
+    @Synchronized
     fun playEffect(resId: Int) {
+        if (effectVolumeLevel == VolumeLevel.OFF) return
         val pool = getSoundPool()
-        val soundId = soundIds[resId] ?: pool.load(appContext, resId, PRIORITY).also {
-            soundIds[resId] = it
+        val cachedSoundId = soundIds[resId]
+        if (cachedSoundId != null) {
+            if (loadedSoundIds.contains(cachedSoundId)) {
+                playLoaded(pool, cachedSoundId)
+            } else {
+                pendingPlayCounts[cachedSoundId] =
+                    pendingPlayCounts.getOrDefault(cachedSoundId, 0) + 1
+            }
+            return
         }
-        pool.play(soundId, VOLUME, VOLUME, PRIORITY, NO_LOOP, NORMAL_RATE)
+
+        val soundId = pool.load(appContext, resId, PRIORITY)
+        soundIds[resId] = soundId
+        pendingPlayCounts[soundId] = 1
+    }
+
+    @Synchronized
+    fun preloadEffects(resIds: Iterable<Int>) {
+        val pool = getSoundPool()
+        for (resId in resIds) {
+            if (soundIds.containsKey(resId)) continue
+            soundIds[resId] = pool.load(appContext, resId, PRIORITY)
+        }
+    }
+
+    fun playOneShot(resId: Int) {
+        playEffect(resId)
+    }
+
+    fun cycleMusicVolume() {
+        musicVolumeLevel = musicVolumeLevel.next()
+        mediaPlayer?.setVolume(musicVolumeLevel.volume, musicVolumeLevel.volume)
+    }
+
+    fun cycleEffectVolume() {
+        effectVolumeLevel = effectVolumeLevel.next()
     }
 
     fun release() {
@@ -61,6 +125,8 @@ class Sound(
         soundPool?.release()
         soundPool = null
         soundIds.clear()
+        loadedSoundIds.clear()
+        pendingPlayCounts.clear()
     }
 
     private fun getSoundPool(): SoundPool {
@@ -74,13 +140,30 @@ class Sound(
             .setAudioAttributes(attrs)
             .setMaxStreams(MAX_STREAMS)
             .build()
-            .also { soundPool = it }
+            .also { pool ->
+                pool.setOnLoadCompleteListener { loadedPool, soundId, status ->
+                    if (status != 0) return@setOnLoadCompleteListener
+                    val playCount = synchronized(this) {
+                        loadedSoundIds += soundId
+                        pendingPlayCounts.remove(soundId) ?: 0
+                    }
+                    repeat(playCount) {
+                        playLoaded(loadedPool, soundId)
+                    }
+                }
+                soundPool = pool
+            }
+    }
+
+    private fun playLoaded(pool: SoundPool, soundId: Int) {
+        if (effectVolumeLevel == VolumeLevel.OFF) return
+        val volume = effectVolumeLevel.volume
+        pool.play(soundId, volume, volume, PRIORITY, NO_LOOP, NORMAL_RATE)
     }
 
     companion object {
-        private const val MAX_STREAMS = 3
+        private const val MAX_STREAMS = 8
         private const val PRIORITY = 1
-        private const val VOLUME = 1f
         private const val NO_LOOP = 0
         private const val NORMAL_RATE = 1f
     }

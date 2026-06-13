@@ -2,6 +2,11 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.HelltakerMobile" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
+        <item name="android:windowBackground">#020216</item>
+        <item name="android:navigationBarColor">#020216</item>
+        <item name="android:statusBarColor">#020216</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
 </resources>

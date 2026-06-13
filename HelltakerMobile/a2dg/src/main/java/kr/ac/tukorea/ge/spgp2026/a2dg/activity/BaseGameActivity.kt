@@ -1,10 +1,12 @@
 package kr.ac.tukorea.ge.spgp2026.a2dg.activity
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
+import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
@@ -16,11 +18,6 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     // App code chooses the root scene.
     protected abstract fun createRootScene(gctx: GameContext): Scene
-
-    // App code injects debug flags so a2dg does not depend on app BuildConfig.
-    protected open val drawsDebugGrid: Boolean = false
-    protected open val drawsDebugInfo: Boolean = false
-    protected open val drawsFpsGraph: Boolean = false
 
     // deprecated 된 onBackPressed() override 대신
     // OnBackPressedCallback 을 멤버로 두고 dispatcher 에 등록해 뒤로 가기 이벤트를 처리한다.
@@ -35,10 +32,9 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        GameView.drawsDebugGrid = drawsDebugGrid
-        GameView.drawsDebugInfo = drawsDebugInfo
-        GameView.drawsFpsGraph = drawsFpsGraph
         gameView = GameView(this)
+        window.decorView.setBackgroundColor(Color.rgb(2, 2, 22))
+        gameView.setBackgroundColor(Color.rgb(2, 2, 22))
         gameView.setRootScene(::createRootScene)
         setContentView(gameView)
         setFullScreen()
@@ -74,6 +70,13 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     @Suppress("DEPRECATION")
     private fun setFullScreen() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val attrs = window.attributes
+            attrs.layoutInDisplayCutoutMode =
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            window.attributes = attrs
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val insetsController = window.insetsController
             if (insetsController != null) {

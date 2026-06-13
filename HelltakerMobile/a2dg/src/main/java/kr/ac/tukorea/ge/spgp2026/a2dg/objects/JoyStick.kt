@@ -3,7 +3,6 @@ package kr.ac.tukorea.ge.spgp2026.a2dg.objects
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.RectF
-import android.util.Log
 import android.view.MotionEvent
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 import kotlin.math.atan2
@@ -119,7 +118,6 @@ class JoyStick(
         // power 는 현재 thumb 가 중심에서 얼마나 멀리 나가 있는지를
         // 0.0~1.0 범위 비율로 바꾼 값이다.
         power = (radius / maxRadius).coerceIn(0f, 1f)
-        Log.d(javaClass.simpleName, "angle=${"%.2f".format(angle)} power=${"%.2f".format(power)}")
         thumbX = resolvedCenterX + dx
         thumbY = resolvedCenterY + dy
     }

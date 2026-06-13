@@ -13,6 +13,7 @@ class GameResources(
     private val resources: Resources,
     context: Context,
 ) {
+    private val appContext = context.applicationContext
     private val bitmapPool = BitmapPool(resources)
     val sound = Sound(context)
 
@@ -20,7 +21,22 @@ class GameResources(
         return bitmapPool.get(resId)
     }
 
+    fun isBitmapLoaded(resId: Int): Boolean {
+        return bitmapPool.contains(resId)
+    }
+
     fun getDrawable(resId: Int): Drawable {
         return ResourcesCompat.getDrawable(resources, resId, null)!!
+    }
+
+    fun readTextAsset(path: String): String {
+        return appContext.assets.open(path).bufferedReader().use {
+            it.readText()
+        }
+    }
+
+    fun release() {
+        sound.release()
+        bitmapPool.clear()
     }
 }
