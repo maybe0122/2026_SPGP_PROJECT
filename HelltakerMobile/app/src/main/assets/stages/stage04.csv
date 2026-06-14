@@ -6,7 +6,6 @@ tile,82
 
 # Traversable cells
 object,floor,0,0
-object,floor,1,0
 object,floor,2,0
 object,floor,3,0
 object,floor,4,0
